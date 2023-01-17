@@ -7,31 +7,40 @@ import { Notification } from './Notification/Notification';
 import { useState } from 'react';
 
 export const App =() =>  {
-  const [feedback, setFeedback] = useState({
-    good: 0,
-    neutral: 0,
-    bad:0,
-  });
+  const [good, setGood] = useState(0);
+  const [neutral, setNeutral] = useState(0);
+  const [bad, setBad] = useState(0);
+
+
+   const feedback = { good, bad, neutral };
  
   const onLeaveFeedback = e => {
      const {name} = e.target;
-  setFeedback(prev  => ({...prev,
-  [name]:prev[name] + 1
- }))
-}
-
-  const totalFeedback = () => {
-    let total = feedback.good + feedback.neutral + feedback.bad;
+  switch (name) {
+      case 'good':
+        setGood(prev => prev + 1);
+        break;
+      case 'neutral':
+        setNeutral(prev => prev + 1);
+        break;
+      case 'bad':
+        setBad(prev => prev + 1);
+        break;
+      default:
+        return;
+    }
+  };
+   const totalFeedback = () => {
+    let total = good + neutral + bad;
     return total;
   };
 
-  const positivePercentage = () => {
+     const positivePercentage = () => {
     if (totalFeedback() === 0) {
       return 0;
     }
-    return Math.round((feedback.good / totalFeedback()) * 100);
+    return Math.round((good / totalFeedback()) * 100);
   };
-    
   
     return (
       <div
@@ -52,12 +61,12 @@ export const App =() =>  {
         </Section>
 
         <Section title="Statistics">
-          {totalFeedback() !== 0 ? (
+          { totalFeedback() !== 0 ? (
           
             <Statistics
-              good={feedback.good}
-              neutral={feedback.neutral}
-              bad={feedback.bad}
+              good={good}
+              neutral={neutral}
+              bad={bad}
               total={totalFeedback()}
               positivePercentage={positivePercentage()}
             />
